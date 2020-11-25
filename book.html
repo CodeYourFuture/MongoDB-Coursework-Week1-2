@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Readwell</title>
+    <style>
+      body {
+        font-family: Georgia, serif;
+        margin: auto;
+        max-width: 768px;
+        text-align: center;
+      }
+
+      p {
+        text-align: left;
+      }
+
+      #book {
+        border: 2px solid grey;
+        display: flex;
+        flex-direction: column;
+        height: 300px;
+        justify-content: space-around;
+        margin: 20px auto;
+        padding: 20px;
+        width: 200px;
+      }
+
+      #more {
+        margin-bottom: 20px;
+      }
+
+      #read-link {
+        display: block;
+        font-size: 200%;
+        margin-bottom: 20px;
+      }
+
+      #title {
+        font-size: 150%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="book">
+      <!-- The book will go here. -->
+    </div>
+
+    <div id="read">
+      <!-- A "Read now!" link will go here. -->
+    </div>
+
+    <div id="more">
+      <!-- The "More by this author" link will go here. -->
+    </div>
+
+    <a href="/">&lt; Back</a>
+
+    <script>
+      const url = location.href;
+      const urlParts = url.split("/");
+      const bookID = urlParts[urlParts.length - 1];
+
+      function showBook(book) {
+        const bookNode = document.getElementById("book");
+
+        bookNode.innerHTML = `
+          <span id="title">${book.title}</span>
+          <span id="author">${book.author}</span>
+        `;
+
+        const readNode = document.getElementById("read");
+
+        readNode.innerHTML = `
+          <a href="${book.url}" id="read-link">Read now!</a>
+        `;
+
+        const moreNode = document.getElementById("more");
+
+        moreNode.innerHTML = `
+          <a href="/authors/${book.author}">
+            More by this author
+          </a>
+        `;
+      }
+
+      fetch("/api/books/" + bookID)
+        .then((response) => response.json())
+        .then((book) => showBook(book));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Readwell</title>
+    <style>
+      body {
+        font-family: Georgia, serif;
+        margin: auto;
+        max-width: 320px;
+        text-align: center;
+      }
+
+      p {
+        text-align: left;
+      }
+
+      #life {
+        margin-bottom: 20px;
+      }
+
+      .author {
+        font-size: 80%;
+        text-align: right;
+      }
+
+      .book {
+        align-items: center;
+        border: 2px solid grey;
+        display: flex;
+        height: 50px;
+        justify-content: space-between;
+        margin: 20px auto;
+        overflow: hidden;
+        padding: 10px;
+        width: 300px;
+      }
+
+      .title {
+        text-align: left;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="name">
+      <!-- The author name will go here. -->
+    </div>
+
+    <div id="life">
+      <!-- The author's birth and death years go here. -->
+    </div>
+
+    <div id="books">
+      <!-- Books by the author go here. -->
+    </div>
+
+    <a href="/">&lt; Back</a>
+
+    <script>
+      const url = location.href;
+      const urlParts = url.split("/");
+      const encodedAuthorName = urlParts[urlParts.length - 1];
+      const authorName = decodeURIComponent(encodedAuthorName);
+
+      const nameNode = document.getElementById("name");
+      nameNode.innerHTML = `<h1>${authorName}</h1>`;
+
+      function show(books) {
+        if (books.length) {
+          const book = books[0];
+
+          const lifeNode = document.getElementById("life");
+
+          lifeNode.innerHTML = `
+            (${book.author_birth_year} &ndash; ${book.author_death_year})
+          `;
+        }
+
+        const booksNode = document.getElementById("books");
+        booksNode.innerHTML = "";
+
+        for (const book of books) {
+          const bookNode = document.createElement("div");
+          bookNode.className = "book";
+
+          bookNode.innerHTML = `
+            <span class="title">
+              <a href="/books/${book._id}">${book.title}</a>
+            </span>
+            <span class="author">${book.author}</span>
+          `;
+
+          booksNode.appendChild(bookNode);
+        }
+      }
+
+      fetch("/api/books?author=" + authorName)
+        .then((response) => response.json())
+        .then((books) => show(books));
+    </script>
+  </body>
+</html>

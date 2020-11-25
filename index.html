@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Readwell</title>
+    <style>
+      body {
+        font-family: Georgia, serif;
+        margin: auto;
+        max-width: 400px;
+        text-align: center;
+      }
+
+      h1 {
+        text-align: center;
+      }
+
+      p {
+        text-align: left;
+      }
+
+      .author {
+        font-size: 80%;
+        text-align: right;
+      }
+
+      .book {
+        align-items: center;
+        border: 2px solid grey;
+        display: flex;
+        height: 50px;
+        justify-content: space-between;
+        margin: 20px auto;
+        overflow: hidden;
+        padding: 10px;
+        width: 300px;
+      }
+
+      .title {
+        text-align: left;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Readwell</h1>
+
+    <p>
+      Find your next favourite classic book! Browse our large shelf of classics,
+      or search for a title or author and click "Search". Happy reading!
+    </p>
+
+    <div>
+      <input id="title" placeholder="Title" />
+      <input id="author" placeholder="Author" />
+    </div>
+
+    <button onclick="search()">Search</button>
+
+    <div id="results">
+      <!-- The results go here. -->
+    </div>
+
+    <script>
+      function showResults(books) {
+        const resultsNode = document.getElementById("results");
+        resultsNode.innerHTML = "";
+
+        for (const book of books) {
+          const bookNode = document.createElement("div");
+          bookNode.className = "book";
+
+          bookNode.innerHTML = `
+            <span class="title">
+              <a href="/books/${book._id}">${book.title}</a>
+            </span>
+            <span class="author">${book.author}</span>
+          `;
+
+          resultsNode.appendChild(bookNode);
+        }
+      }
+
+      function search() {
+        const titleInput = document.getElementById("title");
+        const title = titleInput.value;
+
+        const authorInput = document.getElementById("author");
+        const author = authorInput.value;
+
+        let queryString = "";
+
+        if (title) {
+          queryString = queryString + "title=" + title + "&";
+        }
+
+        if (author) {
+          queryString = queryString + "author=" + author;
+        }
+
+        fetch("/api/books?" + queryString)
+          .then((response) => response.json())
+          .then((json) => showResults(json));
+      }
+
+      search();
+    </script>
+  </body>
+</html>

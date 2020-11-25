@@ -1,0 +1,13 @@
+{
+  "name": "cyf-db-lesson-1-homework",
+  "version": "1.0.0",
+  "description": "Code Your Future database lesson 1 homework",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.16.4",
+    "mongodb": "^3.2.6"
+  }
+}
